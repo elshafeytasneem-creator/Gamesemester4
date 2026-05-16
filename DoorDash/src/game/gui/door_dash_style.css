@@ -1,0 +1,129 @@
+/* =====================================================
+   1. GLOBAL SCENE & LAYOUT THEME
+   ===================================================== */
+.root {
+    -fx-background-color: #1E1E24;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Standard Typography */
+.label {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+}
+
+/* =====================================================
+   2. SIDEBAR & STATISTICS STYLING
+   ===================================================== */
+.stat-title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #A0A0AA;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.8;
+}
+
+.stat-value {
+    -fx-font-size: 18px;
+    -fx-text-fill: #00B0FF;
+    -fx-font-weight: bold;
+}
+
+/* Glowing Dice Roll Display */
+.dice-roll-display {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFD700; /* Gold Glow */
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.5), 15, 0.5, 0, 0);
+}
+
+/* =====================================================
+   3. BOARD TILE & TOKEN STYLING
+   ===================================================== */
+.board-tile {
+    -fx-background-color: #2D2D35;
+    -fx-border-color: #3E4451;
+    -fx-border-width: 1px;
+}
+
+.board-tile-alt {
+    -fx-background-color: #25252B;
+    -fx-border-color: #3E4451;
+    -fx-border-width: 1px;
+}
+
+/* Special Tile Overlays */
+.tile-transport {
+    -fx-background-color: linear-gradient(to bottom right, #2D2D35, #1A237E);
+    -fx-border-color: #3F51B5;
+}
+
+.tile-door {
+    -fx-background-color: linear-gradient(to bottom right, #2D2D35, #311B92);
+    -fx-border-color: #673AB7;
+}
+
+/* Tile Index Numbering */
+.tile-number {
+    -fx-font-size: 11px;
+    -fx-text-fill: #72728A;
+    -fx-opacity: 0.7;
+}
+
+/* Token Badges */
+.token-player {
+    -fx-background-color: #00B0FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+}
+
+.token-opponent {
+    -fx-background-color: #FF1744;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+}
+
+/* =====================================================
+   4. BUTTONS & INTERACTIVE ELEMENTS
+   ===================================================== */
+.button {
+    -fx-background-color: #00B0FF;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.85;
+    -fx-background-color: #33C0FF;
+}
+
+.button:disabled {
+    -fx-background-color: #3E4451;
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+/* =====================================================
+   5. HEADERS & POPUPS
+   ===================================================== */
+.game-title {
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 4);
+}
+
+.glass-panel {
+    -fx-background-color: rgba(45, 52, 64, 0.85);
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #3E4451;
+    -fx-border-width: 1px;
+}

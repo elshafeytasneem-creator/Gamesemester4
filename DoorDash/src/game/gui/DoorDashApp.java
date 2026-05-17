@@ -11,13 +11,15 @@ public class DoorDashApp extends Application {
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
 
-        Scene scene = new Scene(root, 1024, 768);
+        Scene scene = new Scene(root, 1280, 800);
         scene.getStylesheets().add(getClass().getResource("door_dash_style.css").toExternalForm());
 
         SceneManager sceneManager = new SceneManager(primaryStage, scene);
         sceneManager.showMainMenu();
 
         primaryStage.setTitle("DooR DasH: Scare vs Laugh Touchdown");
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(720);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

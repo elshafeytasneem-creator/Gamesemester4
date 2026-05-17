@@ -16,6 +16,8 @@ public class Game {
 	private Monster player;
 	private Monster opponent;
 	private Monster current;
+	private int lastRoll = 0;
+	private int turnCount = 0;
 	
 	public Game(Role playerRole) throws IOException {
 		this.board = new Board(DataLoader.readCards());
@@ -56,6 +58,14 @@ public class Game {
 	public void setCurrent(Monster current) {
 		this.current = current;
 	}
+
+	public int getLastRoll() {
+		return lastRoll;
+	}
+
+	public int getTurnCount() {
+		return turnCount;
+	}
 	
 	private Monster selectRandomMonsterByRole(Role role) {
 		Collections.shuffle(allMonsters);
@@ -71,7 +81,9 @@ public class Game {
 
 	private int rollDice() {
 		Random rand = new Random();
-		return rand.nextInt(6) + 1;
+		int roll = rand.nextInt(6) + 1;
+		this.lastRoll = roll;
+		return roll;
 	}
 	
 	public void usePowerup() throws OutOfEnergyException {
@@ -83,6 +95,8 @@ public class Game {
 	}
 	
 	public void playTurn() throws InvalidMoveException {
+		turnCount++;
+
 		if (current.isFrozen()) {
 			System.out.println(current.getName() + " is frozen! Turn skipped.");
 			current.setFrozen(false);

@@ -635,35 +635,28 @@ sceneManager.showCustomDialog("🃏 CARD DRAWN",
     }
 
     private void updateStatusBadges(HBox statusBox, Monster monster) {
+        // Ultimate guard rail: if the UI box or monster doesn't exist yet, stop immediately!
+        if (statusBox == null || monster == null) {
+            return; 
+        }
+        
         statusBox.getChildren().clear();
         statusBox.setSpacing(5);
 
-        // ── MILESTONE 3: DYNAMIC ROLE BADGE TO INDICATE CONFUSION ──
-        Label roleBadge = new Label(monster.getRole().toString());
-        roleBadge.setStyle(
-            "-fx-font-size: 11px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-padding: 3px 8px; " +
-            "-fx-background-radius: 4px; " +
-            "-fx-text-fill: white; " +
-            "-fx-background-color: " + (monster.getRole().toString().equals("SCARER") ? "#FF4545;" : "#00E5C8;")
-        );
-        statusBox.getChildren().add(roleBadge);
-
-        // ── Your existing status badge logic (Frozen, Shielded, etc.) ──
-        if (monster.isFrozen()) {
-            Label frozenBadge = new Label("FROZEN");
-            frozenBadge.setStyle("-fx-font-size: 10px; -fx-background-color: #4898E0; -fx-text-fill: white; -fx-padding: 2px 5px; -fx-background-radius: 3px;");
-            statusBox.getChildren().add(frozenBadge);
-        }
-        
-        if (monster.isShielded()) {
-            Label shieldBadge = new Label("SHIELDED");
-            shieldBadge.setStyle("-fx-font-size: 10px; -fx-background-color: #CCA800; -fx-text-fill: white; -fx-padding: 2px 5px; -fx-background-radius: 3px;");
-            statusBox.getChildren().add(shieldBadge);
+        // 1. Show the role badge cleanly
+        try {
+            if (monster.getRole() != null) {
+                Label roleBadge = new Label(monster.getRole().toString());
+                roleBadge.setStyle(
+                    "-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 3px 8px; -fx-background-radius: 4px; -fx-text-fill: white; " +
+                    "-fx-background-color: " + (monster.getRole().toString().equals("SCARER") ? "#FF4545;" : "#00E5C8;")
+                );
+                statusBox.getChildren().add(roleBadge);
+            }
+        } catch (Exception e) {
+            // Do nothing if it fails
         }
     }
-
     private void setStatCardActive(VBox box) {
         box.getStyleClass().remove("stat-card");
         if (!box.getStyleClass().contains("active-turn-indicator"))
@@ -800,12 +793,20 @@ sceneManager.showCustomDialog("🃏 CARD DRAWN",
             
             // The bulletproof scoping solution to close the popup window perfectly
             returnButton.setOnAction(e -> {
-                // 1. Close the Game Over popup window safely
+                // 1. Close the popup window safely
                 ((javafx.stage.Stage) returnButton.getScene().getWindow()).close();
                 
-                // 2. Open the SceneManager.java file to find your exact method name.
-                // Replace "showStartWindow()" below with your real method name if it's different!
-                sceneManager.showMainMenu(); 
+                // 2. Safely check if sceneManager exists before using it
+                if (sceneManager != null) {
+                    try {
+                        // Switch back to your start screen method
+                        sceneManager.showMainMenu(); 
+                    } catch (Exception ex) {
+                        System.out.println("⚠️ SceneManager found, but could not switch screens. Check method name.");
+                    }
+                } else {
+                    System.out.println("❌ ERROR: sceneManager variable is NULL inside GameBoardPane! It was never initialized.");
+                }
             });
 
             layout.getChildren().addAll(

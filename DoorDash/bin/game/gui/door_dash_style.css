@@ -221,7 +221,20 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.3), 8, 0, 0, 0);
 }
 
-/* ===== 5. BOARD TILES ===== */
+/* ===== 5. BOARD TILES (UPDATED FOR ROLE DISTINCTION) ===== */
+.tile-door-scarer {
+    -fx-background-color: linear-gradient(to bottom right, #2E1010, #140505);
+    -fx-border-color: #FF4545;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 69, 69, 0.45), 8, 0, 0, 0);
+}
+
+.tile-door-laugher {
+    -fx-background-color: linear-gradient(to bottom right, #082828, #021212);
+    -fx-border-color: #00E5C8;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.45), 8, 0, 0, 0);
+}
 .board-tile {
     -fx-background-color: #161630;
     -fx-border-color: #1C1C44;

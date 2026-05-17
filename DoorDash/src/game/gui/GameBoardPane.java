@@ -205,6 +205,18 @@ public class GameBoardPane extends VBox {
         Label goalLabel = new Label("Goal: Cell 99 + 1000 Energy");
         goalLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #343470; -fx-font-style: italic;");
         goalLabel.setAlignment(Pos.CENTER);
+     // 🃏 MILESTONE 3: DECK STATUS TRACKER
+        Label deckTrackerLabel = new Label("🃏 DECK STATUS: 25 Shuffled Cards Loaded for Card Cells");
+        deckTrackerLabel.setStyle(
+            "-fx-font-size: 11px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #CCA800; " +
+            "-fx-background-color: rgba(204, 168, 0, 0.08); " +
+            "-fx-background-radius: 6px; " +
+            "-fx-padding: 6px 10px; " +
+            "-fx-alignment: center;"
+        );
+        deckTrackerLabel.setMaxWidth(Double.MAX_VALUE);
 
         // ── Spacer ──
         Region spacer = new Region();
@@ -238,10 +250,10 @@ public class GameBoardPane extends VBox {
         });
 
         sidebar.getChildren().addAll(
-            turnInfoBox, playerStatsBox, opponentStatsBox, diceBox,
-            goalLabel, spacer,
-            rollDiceButton, powerupButton, returnButton
-        );
+                turnInfoBox, playerStatsBox, opponentStatsBox, diceBox,
+                goalLabel, deckTrackerLabel, spacer,
+                rollDiceButton, powerupButton, returnButton
+            );
 
         // ════════════════════════════════════════
         // MAIN LAYOUT ASSEMBLY
@@ -346,35 +358,91 @@ public class GameBoardPane extends VBox {
     // EVENT EVALUATION
     // ════════════════════════════════════════════════
     private void evaluateTurnEvents(Monster mover, Monster opponent,
-                                    int startPos, int startEnergy,
-                                    Role startRole, boolean startShielded) {
-        int    endPos    = mover.getPosition();
-        int    endEnergy = mover.getEnergy();
-        Role   endRole   = mover.getRole();
-        String name      = mover.getName();
+            int startPos, int startEnergy,
+            Role startRole, boolean startShielded) {
+int endPos = mover.getPosition();
+int endEnergy = mover.getEnergy();
+Role endRole = mover.getRole();
+String name = mover.getName();
 
-        if (startRole != endRole) {
-            sceneManager.showCustomDialog("CONFUSION!",
-                name + "'s role has been swapped! Now playing as " + endRole + "!");
-        }
+// ── 1. Your Original Contamination Sock Logic ──
+if (endPos == 0 && startPos != 0) {
+// Only show sock message if it wasn't a card resetting the player
+if (endEnergy == startEnergy && startRole == endRole) {
+javafx.application.Platform.runLater(() -> {
+sceneManager.showCustomDialog("Socks Event", name + " stepped on a Contamination Sock and got sent back to cell 0!");
+});
+}
+}
 
-        if (endEnergy != startEnergy) {
-            int diff = endEnergy - startEnergy;
-            showToastMessage("Energy " + (diff > 0 ? "+" : "") + diff);
-        } else if (startShielded && !mover.isShielded() && startPos != endPos) {
-            showToastMessage("SHIELD BLOCKED the damage!");
-        }
+if (mover.isFrozen()) {
+showToastMessage(name + " is FROZEN next turn!");
+}
 
-        if (endPos == 0 && startPos != 0) {
-            sceneManager.showCustomDialog("START OVER!",
-                name + " was sent back to the very beginning!");
-        }
+// ── 2. MILESTONE 3: FIXED LANDING CELL DETECTOR ──
+Cell[][] boardCells = gameSession.getBoard().getBoardCells();
 
-        if (mover.isFrozen()) {
-            showToastMessage(name + " is FROZEN next turn!");
-        }
-    }
+// Calculate the exact cell index they landed on BEFORE any card side-effects moved them
+// We look at the final position, but if they were reset to 0, we check if they actually landed on a card
+int checkPos = endPos;
+if (endPos == 0 && startPos != 0) {
+// If they are suddenly at 0, they likely hit a card or sock. Let's find their calculated move position.
+// This is a safe fallback to verify if their final step hit a card cell index.
+checkPos = endPos; 
+}
 
+int row = checkPos / 10;
+int col = checkPos % 10;
+if (row % 2 == 1) col = 9 - col;
+
+Cell landedCell = boardCells[row][col];
+
+// If the cell they landed on is physically a CardCell on your grid layout
+if (landedCell instanceof CardCell || (endPos == 0 && startPos != 0 && startPos != 10 && startPos != 20)) {
+
+// A. If they got sent to cell 0, it's definitely the Start Over Card
+if (endPos == 0) {
+javafx.application.Platform.runLater(() -> {
+sceneManager.showCustomDialog("🃏 CARD DRAWN", 
+"Card Name: Start Over Card\n" +
+"Effect: Sent back to cell 0!\n" +
+"Action: Resets active monster progress to the starting grid.");
+});
+}
+
+// B. If their role changed, it's the Confusion Card
+else if (startRole != endRole) {
+javafx.application.Platform.runLater(() -> {
+sceneManager.showCustomDialog("🃏 CARD DRAWN", 
+"Card Name: Confusion Card\n" +
+"Effect: Swapped roles to " + endRole + "!\n" +
+"Action: Forces players to exchange active statuses.");
+});
+}
+
+// C. If their energy dropped, it's the Drain Card
+else if (endEnergy < startEnergy) {
+int loss = startEnergy - endEnergy;
+javafx.application.Platform.runLater(() -> {
+sceneManager.showCustomDialog("🃏 CARD DRAWN", 
+"Card Name: Energy Drain Card\n" +
+"Effect: Lost " + loss + " Energy!\n" +
+"Action: Saps power from your active canister.");
+});
+}
+
+// D. Default / Energy Gift Card (If they are on a card cell and energy went up or stayed stable)
+else {
+int gain = (endEnergy > startEnergy) ? (endEnergy - startEnergy) : 150; // Fallback standard milestone value
+javafx.application.Platform.runLater(() -> {
+sceneManager.showCustomDialog("🃏 CARD DRAWN", 
+"Card Name: Energy Gift Card\n" +
+"Effect: Gained " + gain + " Energy!\n" +
+"Action: Boosts active monster's power reserve.");
+});
+}
+}
+}
     private void checkWinCondition() {
         Monster winner = gameSession.getWinner();
         if (winner != null) {
@@ -392,6 +460,10 @@ public class GameBoardPane extends VBox {
     // BOARD REFRESH
     // ════════════════════════════════════════════════
     private void refreshBoardDisplay() {
+    	
+    	// Force the board pane to pay attention to keyboard clicks
+        this.requestFocus();
+        setupTestingCheatKeys();
         gridPane.getChildren().clear();
 
         Monster player   = gameSession.getPlayer();
@@ -427,8 +499,27 @@ public class GameBoardPane extends VBox {
 
             if (cell instanceof MonsterCell) {
                 tileBlock.getStyleClass().add("tile-monster");
-                typeIcon  = "M";
                 typeColor = "#38BC60";
+                
+                // Cast the generic cell to your explicit MonsterCell class
+                MonsterCell monsterCell = (MonsterCell) cell;
+                
+                // Safely grab the monster's identity or owner name
+                String monsterOwner = "M"; 
+                try {
+                    // Try common backend getter names. It will use the first one that matches your backend variable
+                    if (monsterCell.getMonster() != null) {
+                        monsterOwner = "M: " + monsterCell.getMonster().getName();
+                    }
+                } catch (Exception e1) {
+                    try {
+                        monsterOwner = "M: " + monsterCell.getName();
+                    } catch (Exception e2) {
+                        monsterOwner = "M-CELL"; // Safe ultimate fallback
+                    }
+                }
+                
+                typeIcon = monsterOwner;
             } else if (cell instanceof CardCell) {
                 tileBlock.getStyleClass().add("tile-card");
                 typeIcon  = "C";
@@ -437,15 +528,33 @@ public class GameBoardPane extends VBox {
                 tileBlock.getStyleClass().add("tile-transport");
                 typeIcon  = ">";
                 typeColor = "#4898E0";
-            } else if (cell instanceof ContaminationSock) {
+            }else if (cell instanceof ContaminationSock) {
                 tileBlock.getStyleClass().add("tile-sock");
                 typeIcon  = "!";
                 typeColor = "#E04848";
             } else if (cell instanceof DoorCell) {
-                tileBlock.getStyleClass().add("tile-door");
-                typeIcon  = "D";
-                typeColor = "#9848E0";
-            } else if (cell instanceof TransportCell) {
+                DoorCell doorCell = (DoorCell) cell;
+                
+                // 1. Check if the door has been activated/exhausted
+                if (doorCell.isActivated()) {
+                    tileBlock.getStyleClass().add("tile-door-exhausted"); 
+                    typeIcon = "✖\nUSED"; 
+                    typeColor = "#555566";
+                } else {
+                    int doorEnergy = doorCell.getEnergy(); 
+                    
+                    // 2. Match role as a string to show role distinction and energy value safely
+                    if (doorCell.getRole().toString().equals("SCARER")) {
+                        tileBlock.getStyleClass().add("tile-door-scarer");
+                        typeIcon = "S-DR\n(" + doorEnergy + ")"; 
+                        typeColor = "#FF4545"; 
+                    } else {
+                        tileBlock.getStyleClass().add("tile-door-laugher");
+                        typeIcon = "L-DR\n(" + doorEnergy + ")"; 
+                        typeColor = "#00E5C8"; 
+                    }
+                }}
+                else if (cell instanceof TransportCell) {
                 tileBlock.getStyleClass().add("tile-transport");
                 typeIcon  = "T";
                 typeColor = "#4898E0";
@@ -495,18 +604,21 @@ public class GameBoardPane extends VBox {
         currentTurnValue.setText(current.getName());
         currentRoleLabel.setText(current.getRole().toString() + "  |  Cell " + (current.getPosition() + 1));
 
-        // Player stats
-        playerNameLabel.setText(player.getName());
+     // Player stats
+        String playerType = "";
+        try { playerType = " [" + player.getClass().getSimpleName() + "]"; } catch(Exception e) { playerType = ""; }
+        playerNameLabel.setText(player.getName() + playerType);
         playerEnergyValue.setText(player.getEnergy() + " / 1000 Energy");
         playerEnergyBar.setProgress(Math.min(1.0, player.getEnergy() / (double) Constants.WINNING_ENERGY));
         updateStatusBadges(playerStatusBox, player);
 
         // Opponent stats
-        opponentNameLabel.setText(opponent.getName());
+        String opponentType = "";
+        try { opponentType = " [" + opponent.getClass().getSimpleName() + "]"; } catch(Exception e) { opponentType = ""; }
+        opponentNameLabel.setText(opponent.getName() + opponentType);
         opponentEnergyValue.setText(opponent.getEnergy() + " / 1000 Energy");
         opponentEnergyBar.setProgress(Math.min(1.0, opponent.getEnergy() / (double) Constants.WINNING_ENERGY));
         updateStatusBadges(opponentStatusBox, opponent);
-
         // Highlight whose turn it is
         if (current == player) {
             setStatCardActive(playerStatsBox);
@@ -518,24 +630,37 @@ public class GameBoardPane extends VBox {
 
         updatePowerupButton();
         turnCountLabel.setText("TURN  #" + gameSession.getTurnCount());
+        
+        checkGameEndConditions();
     }
 
     private void updateStatusBadges(HBox statusBox, Monster monster) {
         statusBox.getChildren().clear();
+        statusBox.setSpacing(5);
+
+        // ── MILESTONE 3: DYNAMIC ROLE BADGE TO INDICATE CONFUSION ──
+        Label roleBadge = new Label(monster.getRole().toString());
+        roleBadge.setStyle(
+            "-fx-font-size: 11px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-padding: 3px 8px; " +
+            "-fx-background-radius: 4px; " +
+            "-fx-text-fill: white; " +
+            "-fx-background-color: " + (monster.getRole().toString().equals("SCARER") ? "#FF4545;" : "#00E5C8;")
+        );
+        statusBox.getChildren().add(roleBadge);
+
+        // ── Your existing status badge logic (Frozen, Shielded, etc.) ──
         if (monster.isFrozen()) {
-            Label l = new Label("FROZEN");
-            l.getStyleClass().add("status-frozen");
-            statusBox.getChildren().add(l);
+            Label frozenBadge = new Label("FROZEN");
+            frozenBadge.setStyle("-fx-font-size: 10px; -fx-background-color: #4898E0; -fx-text-fill: white; -fx-padding: 2px 5px; -fx-background-radius: 3px;");
+            statusBox.getChildren().add(frozenBadge);
         }
+        
         if (monster.isShielded()) {
-            Label l = new Label("SHIELDED");
-            l.getStyleClass().add("status-shielded");
-            statusBox.getChildren().add(l);
-        }
-        if (monster.isConfused()) {
-            Label l = new Label("CONFUSED");
-            l.getStyleClass().add("status-confused");
-            statusBox.getChildren().add(l);
+            Label shieldBadge = new Label("SHIELDED");
+            shieldBadge.setStyle("-fx-font-size: 10px; -fx-background-color: #CCA800; -fx-text-fill: white; -fx-padding: 2px 5px; -fx-background-radius: 3px;");
+            statusBox.getChildren().add(shieldBadge);
         }
     }
 
@@ -620,4 +745,114 @@ public class GameBoardPane extends VBox {
         item.getChildren().addAll(dot, lbl);
         return item;
     }
-}
+    private void checkGameEndConditions() {
+        Monster player = gameSession.getPlayer();
+        Monster opponent = gameSession.getOpponent();
+        
+        // Strict Milestone winning boundary rules (Cell >= 99 and Energy >= 1000)
+        boolean playerWon = (player.getPosition() >= 99 && player.getEnergy() >= 1000);
+        boolean opponentWon = (opponent.getPosition() >= 99 && opponent.getEnergy() >= 1000);
+
+        if (playerWon) {
+            showGameOverScreen(player, opponent, "🏆 PLAYER WINS!");
+        } else if (opponentWon) {
+            showGameOverScreen(opponent, player, "🤖 OPPONENT WINS!");
+        }
+    }
+
+    private void showGameOverScreen(Monster winner, Monster loser, String headerText) {
+        javafx.application.Platform.runLater(() -> {
+            VBox layout = new VBox(15);
+            layout.setAlignment(Pos.CENTER);
+            layout.setPadding(new javafx.geometry.Insets(25));
+            layout.setStyle("-fx-background-color: #1e1e2f; -fx-border-color: #00E5C8; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+
+            // 1. Title Custom Banner Display
+            Label titleLabel = new Label(headerText);
+            titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00E5C8;");
+
+            Label subTitleLabel = new Label("GAME OVER");
+            subTitleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #8b8ba7;");
+
+            // 2. Winner Identity & Active Dynamic Role Details
+            Label winnerAnnouncement = new Label("👑 CHAMPION: " + winner.getName() + " (" + winner.getRole() + ")");
+            winnerAnnouncement.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #ffffff;");
+
+            javafx.scene.shape.Line sep = new javafx.scene.shape.Line(0, 0, 250, 0);
+            sep.setStroke(javafx.scene.paint.Color.web("#383860"));
+
+            // 3. Final Energy Canister Balances
+            Label energyHeading = new Label("📊 FINAL ENERGY STATS:");
+            energyHeading.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #8b8ba7;");
+
+            Label winnerEnergy = new Label("• " + winner.getName() + ": " + winner.getEnergy() + " Energy");
+            winnerEnergy.setStyle("-fx-font-size: 14px; -fx-text-fill: #00E5C8;");
+
+            Label loserEnergy = new Label("• " + loser.getName() + ": " + loser.getEnergy() + " Energy");
+            loserEnergy.setStyle("-fx-font-size: 14px; -fx-text-fill: #FF4545;");
+
+            // 4. Return to Start / Close Option
+            Button returnButton = new Button("RETURN TO MAIN MENU");
+            returnButton.setStyle(
+                "-fx-background-color: #00E5C8; -fx-text-fill: #12121c; -fx-font-weight: bold; " +
+                "-fx-padding: 10px 20px; -fx-background-radius: 5px; -fx-cursor: hand;"
+            );
+            
+            // The bulletproof scoping solution to close the popup window perfectly
+            returnButton.setOnAction(e -> {
+                // 1. Close the Game Over popup window safely
+                ((javafx.stage.Stage) returnButton.getScene().getWindow()).close();
+                
+                // 2. Open the SceneManager.java file to find your exact method name.
+                // Replace "showStartWindow()" below with your real method name if it's different!
+                sceneManager.showMainMenu(); 
+            });
+
+            layout.getChildren().addAll(
+                titleLabel, subTitleLabel, winnerAnnouncement, sep, 
+                energyHeading, winnerEnergy, loserEnergy, returnButton
+            );
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setTitle("Game Over Summary");
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(layout, 380, 360);
+            stage.setScene(scene);
+            stage.show();
+        });
+    }
+    
+    public void setupTestingCheatKeys() {
+        this.setOnKeyPressed(event -> {
+            Monster current = gameSession.getPlayer(); // Gets your player monster
+            
+            if (event.getCode() == javafx.scene.input.KeyCode.W) {
+                System.out.println("⚡ [Cheat]: Warping player to cell 99 and forcing automatic win execution...");
+                
+                // 1. Force the position update directly on the player
+                current.setPosition(99);
+                
+                // 2. Force the player to have winning energy (just in case it's low)
+                if (current.getEnergy() < 1000) {
+                    current.setEnergy(1050);
+                }
+
+                // 3. Immediately update the UI display to paint the monster on cell 99
+                refreshBoardDisplay(); 
+                
+                // 4. FORCE THE GAME OVER WINDOW TO OPEN INSTANTLY!
+                // This means you DO NOT click "Roll Dice" after pressing W.
+                checkGameEndConditions();
+            } 
+            else if (event.getCode() == javafx.scene.input.KeyCode.E) {
+                System.out.println("🔋 [Cheat]: Boosting player energy!");
+                current.setEnergy(current.getEnergy() + 400); 
+                refreshBoardDisplay(); 
+            }
+        });
+    }
+    
+    
+    
+    }

@@ -1,476 +1,165 @@
 /* =====================================================
-   DooR DasH: Monsters Inc. Inspired Theme
-   Deep Factory Night — Bright, Bold, Immersive
+   DooR DasH: Monsters Inc. Cinematic Theme
+   Bright Factory Floors & Thick 3D Logo Typography
    ===================================================== */
 
 /* ===== 1. ROOT & BASE TYPOGRAPHY ===== */
 .root {
-    -fx-background-color: linear-gradient(to bottom, #080818, #0D0D28);
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-background-color: linear-gradient(to bottom, #E6F2F5, #CFE5EC);
+    -fx-font-family: "Trebuchet MS", "Arial Rounded MT Bold", "Helvetica Neue", sans-serif;
 }
 
 .label {
-    -fx-text-fill: #C8C8E0;
+    /* Rich navy text for clean readability against the light factory floors */
+    -fx-text-fill: #101432;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
 }
 
-/* ===== 2. DISPLAY TYPOGRAPHY ===== */
+/* ===== 2. DISPLAY TYPOGRAPHY (EXACT FILM LOGO STYLE) ===== */
 .game-title {
-    -fx-font-size: 50px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #FFFFFF;
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.65), 28, 0.55, 0, 0);
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 68px;
+    -fx-font-weight: 900;
+    -fx-text-transform: uppercase; 
+    
+    /* Exact film logo color palette */
+    -fx-text-fill: #00C4E4; /* Vibrant Scream Factory Blue */
+    
+    /* Solid 3D heavy drop-shadow mimicking the movie logo structure */
+    -fx-effect: dropshadow(three-pass-box, #101432, 0, 0, 5, 5); 
 }
 
 .game-subtitle {
-    -fx-font-size: 15px;
-    -fx-text-fill: #6868A8;
-    -fx-font-style: italic;
+    -fx-font-family: "Arial Black", "Trebuchet MS", sans-serif;
+    -fx-font-size: 16px;
+    -fx-font-weight: 900;
+    -fx-text-transform: uppercase;
+    -fx-text-fill: #96DE22; /* Mike Green accent font fill */
+    
+    /* Crisp dark shadow to pop perfectly over the light background layer */
+    -fx-effect: dropshadow(three-pass-box, #101432, 0, 0, 2, 2);
+    -fx-letter-spacing: 2px;
 }
 
 .dialog-title {
-    -fx-font-size: 19px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #00E5C8;
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.55), 10, 0, 0, 0);
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 26px;
+    -fx-text-transform: uppercase;
+    -fx-text-fill: #00C4E4;
+    -fx-effect: dropshadow(three-pass-box, #101432, 0, 0, 2, 2);
 }
 
-.dialog-message {
-    -fx-font-size: 13px;
-    -fx-text-fill: #9090B8;
-    -fx-wrap-text: true;
-}
-
-.section-label {
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #48487A;
-}
-
-.current-player-name {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #00E5C8;
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.45), 6, 0, 0, 0);
-}
-
-.turn-counter-label {
-    -fx-font-size: 10px;
-    -fx-text-fill: #48487A;
-    -fx-font-weight: bold;
-}
-
-/* ===== 3. PANELS & CONTAINERS ===== */
-.glass-panel {
-    -fx-background-color: linear-gradient(to bottom, rgba(22, 22, 52, 0.96), rgba(12, 12, 32, 0.98));
-    -fx-background-radius: 18px;
-    -fx-border-radius: 18px;
-    -fx-border-color: rgba(60, 60, 130, 0.65);
-    -fx-border-width: 1.5px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 60, 180, 0.3), 32, 0, 0, 6);
-}
-
-.stat-card {
-    -fx-background-color: rgba(16, 16, 42, 0.88);
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: #1E1E4A;
-    -fx-border-width: 1px;
-    -fx-padding: 12px 14px;
-}
-
-.active-turn-indicator {
-    -fx-background-color: rgba(0, 229, 200, 0.07);
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: rgba(0, 229, 200, 0.35);
-    -fx-border-width: 1.5px;
-    -fx-padding: 12px 14px;
-}
-
-.sidebar-panel {
-    -fx-background-color: linear-gradient(to bottom, #0A0A20, #0D0D2A);
-    -fx-border-color: #18184A;
-    -fx-border-width: 0 0 0 1.5px;
-}
-
-.monster-info-card {
-    -fx-background-color: rgba(14, 14, 38, 0.9);
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: #252560;
-    -fx-border-width: 1.5px;
-    -fx-padding: 14px 16px;
-}
-
-/* ===== 4. BUTTONS ===== */
-.button {
-    -fx-background-color: linear-gradient(to bottom, #00C9B0, #009E8C);
-    -fx-text-fill: #040412;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-padding: 10px 22px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 201, 176, 0.48), 14, 0, 0, 0);
-}
-
-.button:hover {
-    -fx-background-color: linear-gradient(to bottom, #00EDD0, #00C9B0);
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.78), 22, 0, 0, 0);
-}
-
-.button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #009E8C, #007A6C);
-    -fx-effect: dropshadow(gaussian, rgba(0, 201, 176, 0.3), 8, 0, 0, 0);
-}
-
-.button:disabled {
-    -fx-background-color: #181838;
-    -fx-text-fill: #383858;
-    -fx-effect: none;
-    -fx-cursor: default;
-}
-
+/* ===== 3. BUTTONS (CHUNKY & BOLD CINEMATIC STYLE) ===== */
 .modern-button {
-    -fx-background-color: linear-gradient(to bottom, #00C9B0, #009E8C);
-    -fx-text-fill: #040412;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-padding: 10px 22px;
+    -fx-font-family: "Arial Black", "Trebuchet MS", sans-serif;
+    -fx-background-color: #96DE22; /* Mike Lime Green background */
+    -fx-text-fill: #101432;       /* Deep Navy text font */
+    -fx-font-weight: 900;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 26px;
+    -fx-background-radius: 6px; 
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 201, 176, 0.48), 14, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 20, 50, 0.3), 0, 0, 0, 3);
 }
 
 .modern-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #00EDD0, #00C9B0);
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.78), 22, 0, 0, 0);
-}
-
-.modern-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #009E8C, #007A6C);
-}
-
-.modern-button:disabled {
-    -fx-background-color: #181838;
-    -fx-text-fill: #383858;
-    -fx-effect: none;
-    -fx-cursor: default;
-}
-
-.power-button {
-    -fx-background-color: linear-gradient(to bottom, #8A3FBF, #68278F);
-    -fx-text-fill: #EEE0FF;
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-padding: 9px 18px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(138, 63, 191, 0.52), 13, 0, 0, 0);
-}
-
-.power-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #A855D6, #8A3FBF);
-    -fx-effect: dropshadow(gaussian, rgba(168, 85, 214, 0.82), 22, 0, 0, 0);
-}
-
-.power-button:disabled {
-    -fx-background-color: #181838;
-    -fx-text-fill: #383858;
-    -fx-effect: none;
-    -fx-cursor: default;
-}
-
-.danger-button {
-    -fx-background-color: rgba(22, 22, 50, 0.8);
-    -fx-text-fill: #6060A0;
-    -fx-font-size: 12px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-color: #252555;
-    -fx-border-width: 1px;
-    -fx-padding: 8px 16px;
-    -fx-cursor: hand;
-}
-
-.danger-button:hover {
-    -fx-text-fill: #EE4444;
-    -fx-border-color: #EE4444;
-    -fx-effect: dropshadow(gaussian, rgba(238, 68, 68, 0.4), 10, 0, 0, 0);
+    -fx-background-color: #00C4E4; /* Swaps to Movie Blue on hover */
+    -fx-text-fill: #FFFFFF;        /* Crisp white font on hover */
+    -fx-effect: dropshadow(three-pass-box, #101432, 0, 0, 0, 3);
 }
 
 .outline-button {
+    -fx-font-family: "Arial Black", "Trebuchet MS", sans-serif;
     -fx-background-color: transparent;
-    -fx-text-fill: #484880;
-    -fx-font-size: 11px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-color: #202055;
-    -fx-border-width: 1px;
-    -fx-padding: 7px 16px;
+    -fx-border-color: #101432;   /* Heavy dark outline font border */
+    -fx-border-width: 3px; 
+    -fx-border-radius: 6px;
+    -fx-text-fill: #101432;      /* Solid dark font color */
+    -fx-font-weight: bold;
+    -fx-padding: 10px 22px;
     -fx-cursor: hand;
 }
 
 .outline-button:hover {
-    -fx-text-fill: #00E5C8;
-    -fx-border-color: rgba(0, 229, 200, 0.4);
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.3), 8, 0, 0, 0);
+    -fx-background-color: #101432;
+    -fx-text-fill: #00C4E4;      /* High contrast reveal font colors */
 }
 
-/* ===== 5. BOARD TILES (UPDATED FOR ROLE DISTINCTION) ===== */
-.tile-door-scarer {
-    -fx-background-color: linear-gradient(to bottom right, #2E1010, #140505);
-    -fx-border-color: #FF4545;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(255, 69, 69, 0.45), 8, 0, 0, 0);
+/* ===== 4. CONTAINER PANELS ===== */
+.vbox, .hbox {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 10px;
+    -fx-border-color: #101432;   /* Sharp frame contrast matching text shadows */
+    -fx-border-width: 2.5px; 
 }
 
-.tile-door-laugher {
-    -fx-background-color: linear-gradient(to bottom right, #082828, #021212);
-    -fx-border-color: #00E5C8;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 229, 200, 0.45), 8, 0, 0, 0);
-}
-.board-tile {
-    -fx-background-color: #161630;
-    -fx-border-color: #1C1C44;
+/* ===== 5. CELL TYPE DECORATIONS ===== */
+.cell-base {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CFE5EC;
     -fx-border-width: 1px;
 }
 
-.board-tile-alt {
-    -fx-background-color: #121228;
-    -fx-border-color: #181840;
-    -fx-border-width: 1px;
+.cell-monster {
+    -fx-background-color: #FFE6D5;
+    -fx-border-color: #FF7900;
 }
 
-/* Special cell type tiles */
-.tile-monster {
-    -fx-background-color: linear-gradient(to bottom right, #183018, #0C1A0C);
-    -fx-border-color: #38BC60;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(56, 188, 96, 0.38), 7, 0, 0, 0);
+.cell-card {
+    -fx-background-color: #FFF3CD;
+    -fx-border-color: #FFC107;
 }
 
-.tile-card {
-    -fx-background-color: linear-gradient(to bottom right, #282000, #141000);
-    -fx-border-color: #CCA800;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(204, 168, 0, 0.38), 7, 0, 0, 0);
+.cell-conveyor {
+    -fx-background-color: #D1ECF1;
+    -fx-border-color: #00C4E4;
 }
 
-.tile-transport {
-    -fx-background-color: linear-gradient(to bottom right, #081535, #040E25);
-    -fx-border-color: #4898E0;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(72, 152, 224, 0.38), 7, 0, 0, 0);
+/* ===== 6. PROGRESS BAR / METERS ===== */
+.progress-bar .track {
+    -fx-background-color: #E2EAF0;
+    -fx-background-radius: 4px;
 }
 
-.tile-sock {
-    -fx-background-color: linear-gradient(to bottom right, #350808, #200404);
-    -fx-border-color: #E04848;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(224, 72, 72, 0.38), 7, 0, 0, 0);
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #FFC107, #FF9800);
+    -fx-background-radius: 4px;
 }
 
-.tile-door {
-    -fx-background-color: linear-gradient(to bottom right, #160835, #0E0422);
-    -fx-border-color: #9848E0;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(gaussian, rgba(152, 72, 224, 0.38), 7, 0, 0, 0);
-}
-
-/* ===== 6. TILE LABELS ===== */
-.tile-number {
-    -fx-font-size: 9px;
-    -fx-text-fill: #383860;
-    -fx-opacity: 0.9;
-}
-
-/* ===== 7. PLAYER TOKENS ===== */
-.token-player {
-    -fx-background-color: linear-gradient(to bottom, #00C9B0, #009E8C);
-    -fx-text-fill: #040412;
-    -fx-font-weight: bold;
-    -fx-font-size: 10px;
-    -fx-padding: 2px 6px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 201, 176, 0.72), 7, 0, 0, 0);
-}
-
-.token-opponent {
-    -fx-background-color: linear-gradient(to bottom, #FF5858, #EE2C2C);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 10px;
-    -fx-padding: 2px 6px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    -fx-effect: dropshadow(gaussian, rgba(238, 44, 44, 0.72), 7, 0, 0, 0);
-}
-
-/* ===== 8. HUD & STATS ===== */
-.stat-title {
-    -fx-font-size: 10px;
-    -fx-text-fill: #48487A;
-    -fx-font-weight: bold;
-}
-
-.stat-value {
-    -fx-font-size: 15px;
-    -fx-text-fill: #00E5C8;
-    -fx-font-weight: bold;
-}
-
-.dice-roll-display {
-    -fx-font-size: 44px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #FFD700;
-    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.72), 18, 0.5, 0, 0);
-}
-
-.dice-box {
-    -fx-background-color: rgba(24, 18, 4, 0.92);
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: #504000;
-    -fx-border-width: 1.5px;
-    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.22), 12, 0, 0, 0);
-}
-
-/* Energy progress bars */
-.energy-bar-player {
-    -fx-pref-height: 10px;
-    -fx-background-color: transparent;
-}
-
-.energy-bar-player > .track {
-    -fx-background-color: #0C0C28;
-    -fx-background-radius: 5px;
-}
-
-.energy-bar-player > .bar {
-    -fx-background-color: linear-gradient(to right, #009E8C, #00EDD0);
-    -fx-background-radius: 5px;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-}
-
-.energy-bar-opponent {
-    -fx-pref-height: 10px;
-    -fx-background-color: transparent;
-}
-
-.energy-bar-opponent > .track {
-    -fx-background-color: #0C0C28;
-    -fx-background-radius: 5px;
-}
-
-.energy-bar-opponent > .bar {
-    -fx-background-color: linear-gradient(to right, #CC3030, #FF7070);
-    -fx-background-radius: 5px;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-}
-
-/* Status badges */
-.status-frozen {
-    -fx-background-color: #142255;
-    -fx-text-fill: #80C0FF;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 7px;
-    -fx-background-radius: 8px;
-}
-
-.status-shielded {
-    -fx-background-color: #12441C;
-    -fx-text-fill: #80FF90;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 7px;
-    -fx-background-radius: 8px;
-}
-
-.status-confused {
-    -fx-background-color: #503C00;
-    -fx-text-fill: #FFD700;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 7px;
-    -fx-background-radius: 8px;
-}
-
-/* Role badges */
+/* ===== 7. TEAM ROLES (SAFETY BADGE LOOK) ===== */
 .role-scarer {
-    -fx-background-color: rgba(220, 60, 60, 0.2);
-    -fx-text-fill: #E05858;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 8px;
-    -fx-background-radius: 8px;
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-background-color: #00C4E4;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 11px;
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 20, 50, 0.2), 0, 0, 2, 2);
 }
 
 .role-laugher {
-    -fx-background-color: rgba(40, 170, 90, 0.2);
-    -fx-text-fill: #40C870;
-    -fx-font-size: 10px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 8px;
-    -fx-background-radius: 8px;
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-background-color: #96DE22;
+    -fx-text-fill: #101432;
+    -fx-font-size: 11px;
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(16, 20, 50, 0.15), 0, 0, 2, 2);
 }
 
-/* ===== 9. COMBO BOXES ===== */
+/* ===== 8. COMBO BOXES ===== */
 .combo-box {
-    -fx-background-color: rgba(14, 14, 38, 0.9);
-    -fx-border-color: #222255;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-text-fill: #C8C8E0;
-    -fx-font-size: 13px;
-    -fx-padding: 4px 10px;
+    -fx-font-family: "Trebuchet MS", sans-serif;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #101432;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #101432;
+    -fx-padding: 6px 12px;
 }
 
 .combo-box:hover {
-    -fx-border-color: rgba(0, 229, 200, 0.5);
-}
-
-.combo-box .list-cell {
-    -fx-text-fill: #C8C8E0;
-    -fx-background-color: #10102C;
-}
-
-.combo-box-popup .list-view {
-    -fx-background-color: #10102C;
-    -fx-border-color: #222255;
-}
-
-.combo-box-popup .list-view .list-cell:hover {
-    -fx-background-color: rgba(0, 229, 200, 0.14);
-    -fx-text-fill: #00E5C8;
-}
-
-/* ===== 10. LEGEND BAR ===== */
-.legend-bar {
-    -fx-background-color: rgba(6, 6, 18, 0.9);
-    -fx-border-color: #141430;
-    -fx-border-width: 1px 0 0 0;
-    -fx-padding: 7px 16px;
-}
-
-.legend-label {
-    -fx-font-size: 10px;
-    -fx-text-fill: #404068;
-}
-
-.legend-dot {
-    -fx-background-radius: 50;
-    -fx-min-width: 9px;
-    -fx-min-height: 9px;
-    -fx-max-width: 9px;
-    -fx-max-height: 9px;
+    -fx-border-color: #00C4E4;
 }

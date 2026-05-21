@@ -465,8 +465,20 @@ public class GameBoardPane extends StackPane {
 
     private void handlePowerup() {
         try {
+            Monster opponent = (gameSession.getCurrent() == gameSession.getPlayer())
+                    ? gameSession.getOpponent() : gameSession.getPlayer();
             gameSession.usePowerup();
-            showToastMessage("Power-Up Activated!");
+            // Check if the opponent is now frozen (Dynamo effect)
+            if (opponent.isFrozen()) {
+                showStyledDialog("DYNAMO POWER-UP ACTIVATED",
+                        "Dynamo's freeze effect activated!\n\n" +
+                        opponent.getName() + " has been FROZEN.\n\n" +
+                        "Their turn will be skipped.\n\n" +
+                        "The freeze status is shown on their stat card.",
+                        null);
+            } else {
+                showToastMessage("Power-Up Activated!");
+            }
             refreshBoardDisplay();
             updatePowerupButton();
         } catch (OutOfEnergyException e) {
@@ -493,8 +505,15 @@ public class GameBoardPane extends StackPane {
             }
         }
 
-        if (mover.isFrozen()) {
-            showToastMessage(name + " is FROZEN next turn!");
+        // If the roll came back as 0 it means the turn was skipped due to freeze
+        if (gameSession.getLastRoll() == 0) {
+            showStyledDialog("TURN SKIPPED - FROZEN",
+                    name + "'s turn has been skipped!\n\n" +
+                    "The Dynamo power-up has frozen this monster solid.\n" +
+                    "No movement or actions are possible while frozen.",
+                    null);
+        } else if (mover.isFrozen()) {
+            showToastMessage("❄ " + name + " is FROZEN — turn will be skipped!");
         }
 
         Cell[][] boardCells = gameSession.getBoard().getBoardCells();
@@ -710,6 +729,19 @@ public class GameBoardPane extends StackPane {
                     "-fx-background-color: " + (monster.getRole().toString().equals("SCARER") ? "#D93838;" : "#009E8C;")
                 );
                 statusBox.getChildren().add(roleBadge);
+            }
+        } catch (Exception e) {}
+
+        try {
+            if (monster.isFrozen()) {
+                Label freezeBadge = new Label("❄ FROZEN");
+                freezeBadge.setStyle(
+                    "-fx-font-family: 'Lucida Sans Unicode'; -fx-font-size: 10px; -fx-font-weight: bold; " +
+                    "-fx-padding: 3px 7px; -fx-background-radius: 4px; -fx-text-fill: #FFFFFF; " +
+                    "-fx-background-color: #3A8FC7; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(58,143,199,0.4), 6, 0, 0, 1);"
+                );
+                statusBox.getChildren().add(freezeBadge);
             }
         } catch (Exception e) {}
     }
